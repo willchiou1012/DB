@@ -3,156 +3,126 @@ import { useState } from "react";
 import Axios from "axios";
 
 function App() {
-  const [name, setName] = useState("");
-  const [age, setAge] = useState(0);
-  const [country, setCountry] = useState("");
-  const [position, setPosition] = useState("");
-  const [wage, setWage] = useState(0);
+  const [Customer_ID, setCustomer_ID] = useState("");
+  const [Customer_Name, setCustomer_Name] = useState("");
+  const [Customer_Number, setCustomer_Number] = useState("");
 
-  const [newWage, setNewWage] = useState(0);
+//
 
-  const [employeeList, setEmployeeList] = useState([]);
-
-  const addEmployee = () => {
-    Axios.post("http://localhost:3001/create", {
-      name: name,
-      age: age,
-      country: country,
-      position: position,
-      wage: wage,
+  const addcustomer = () => {
+    Axios.post("http://localhost:3001/customer", {
+      Customer_ID: ID,
+      Customer_Name: Name,
+      Customer_Number: Number,
     }).then(() => {
-      setEmployeeList([
-        ...employeeList,
-        {
-          name: name,
-          age: age,
-          country: country,
-          position: position,
-          wage: wage,
-        },
-      ]);
+      getcustomer();
     });
   };
 
-  const getEmployees = () => {
-    Axios.get("http://localhost:3001/employees").then((response) => {
-      setEmployeeList(response.data);
+  const getcustomer = () => {
+    Axios.get("http://localhost:3001/customer").then((response) => {
+      setcustomerList(response.data);
     });
   };
 
-  const updateEmployeeWage = (id) => {
-    Axios.put("http://localhost:3001/update", { wage: newWage, id: id }).then(
+  const formatData = (dataString) => {
+    const data = new Data(dataString);
+    return data.toLocaleDateString();
+  };
+
+  const updatecustomer = (Customer_ID) => {
+    const newCustomername = prompt("Enter New Customer Name:");
+    if (newCustomername !== null) {
+      Axios.put(`http://localhost:3001/updatecustomer/${Customer_ID}` , {
+    }).then({} => {
+      getcustomer();
+    });
+    }
+  };
+
+  const deletecustomer = (Customer_ID) => {
+    Axios.get(`http://localhost:3001/deletecustomer/${Customer_ID}`).then(() => {
+      getcustomer();
+    });
+  };
+
+  const searchcustomer = () => {
+    Axios.get(`http://localhost:3001/searchcustomer?search=/${searchQuery}`).then(
       (response) => {
-        setEmployeeList(
-          employeeList.map((val) => {
-            return val.id == id
-              ? {
-                  id: val.id,
-                  name: val.name,
-                  country: val.country,
-                  age: val.age,
-                  position: val.position,
-                  wage: newWage,
-                }
-              : val;
-          })
-        );
+        setSearchResults(response,data);
       }
     );
-  };
-
-  const deleteEmployee = (id) => {
-    Axios.delete(`http://localhost:3001/delete/${id}`).then((response) => {
-      setEmployeeList(
-        employeeList.filter((val) => {
-          return val.id != id;
-        })
-      );
-    });
   };
 
   return (
     <div className="App">
       <div className="information">
-        <label>Name:</label>
+        <label>Customer_ID:</label>
         <input
-          type="text"
+          type="Customer_ID"
           onChange={(event) => {
             setName(event.target.value);
           }}
         />
-        <label>Age:</label>
+        <label>Customer_Name:</label>
         <input
-          type="number"
+          type="Customer_Name"
           onChange={(event) => {
             setAge(event.target.value);
           }}
         />
-        <label>Country:</label>
+        <label>Customer_Number:</label>
         <input
-          type="text"
+          type="Customer_Number"
           onChange={(event) => {
             setCountry(event.target.value);
           }}
         />
-        <label>Position:</label>
+        <button onClick={addcustomer}>Add customer</button>
+      </div>
+      <div className="customer">
+        <button onClick={getcustomer}>Show customer</button>
+
+        {customerList.map((customer, index) => {
+          return (
+            <div className="customer" key={index}>
+              <div>
+                <h3>ID: {customer.customer_id}</h3>
+                <h3>Name: {customer.customer_name}</h3>
+                <h3>Number: {customer.customer_number}</h3>
+                <button onClick={() => updatacustomer(customer.customer_id)}>Updata</button>
+                <button onClick={() => deletecustomer(customer.customer_id)}>Delete</button>
+              </div>
+            </div>
+          );
+        })};
+      </div>
+
+      <div className="search">
+        <label>Search customer:</label>
         <input
           type="text"
           onChange={(event) => {
-            setPosition(event.target.value);
+            setSearchQuery(event.target.value);
           }}
         />
-        <label>Wage (year):</label>
-        <input
-          type="number"
-          onChange={(event) => {
-            setWage(event.target.value);
-          }}
-        />
-        <button onClick={addEmployee}>Add Employee</button>
+        <button onClick={searchcustomer}>Search</button>
       </div>
-      <div className="employees">
-        <button onClick={getEmployees}>Show Employees</button>
 
-        {employeeList.map((val, key) => {
+      {/* Display search results */}
+      <div className="search-results">
+        {searchResults.map((result, index) => {
           return (
-            <div className="employee">
-              <div>
-                <h3>Name: {val.name}</h3>
-                <h3>Age: {val.age}</h3>
-                <h3>Country: {val.country}</h3>
-                <h3>Position: {val.position}</h3>
-                <h3>Wage: {val.wage}</h3>
-              </div>
-              <div>
-                <input
-                  type="text"
-                  placeholder="2000..."
-                  onChange={(event) => {
-                    setNewWage(event.target.value);
-                  }}
-                />
-                <button
-                  onClick={() => {
-                    updateEmployeeWage(val.id);
-                  }}
-                >
-                  {" "}
-                  Update
-                </button>
-
-                <button
-                  onClick={() => {
-                    deleteEmployee(val.id);
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
+            <div className="search-result" key={index}>
+              {/* <p>customername: {result.customer_name}</p> */}
+              <p>Ingredient: {result.ingredient_name}</p>
+              <p>Expiration Date: {formatDate(result.expiration_date)}</p>
             </div>
           );
         })}
       </div>
+
+
     </div>
   );
 }
