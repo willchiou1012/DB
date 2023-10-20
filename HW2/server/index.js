@@ -2,7 +2,6 @@ const express = require("express");
 const app = express();
 const mysql = require("mysql");
 const cors = require("cors");
-const { v4: uuidv4 } = require("uuid");
 
 app.use(cors());
 app.use(express.json());
@@ -14,50 +13,49 @@ const db = mysql.createConnection({
   database: "hotel",
 });
 
-app.post("/createcustomer", (req, res) => {
-  const Customer_ID = req.body.Customer_ID;
-  const Customer_Name = req.body.Customer_Name;
-  const Customer_Number = req.body.Customer_Number;
+app.post("/createCustomers", (req, res) => {
+  const id = req.body.customer_id;
+  const name = req.body.customer_name;
+  const number = req.body.customer_number;
+ ;
 
-  const fullUUID = uuidv4();
-  const userid = fullUUID.slice(0, 16);
 
   db.query(
-    "INSERT INTO usersystem.users (Customer_ID, Customer_Name, Customer_Number) VALUES (?,?,?,?,?,?)",
-    [Customer_ID, Customer_Name, Customer_Number],
+    "INSERT INTO hotel.customers (customer_id,customer_name,customer_number) VALUES (?,?,?)",
+    [id, name, number],
     (err, result) => {
       if (err) {
         console.log(err);
-        res.status(500).send("Error creating user");
+        res.status(500).send("Error creating customer");
       } else {
-        console.log("Customer Created with ID: " + Customer_ID);
-        res.status(200).send("Customer created successfully");
+        
+        res.status(200).send("customer created successfully");
       }
     }
   );
 });
 
-app.get("/customer", (req, res) => {
-  db.query("SELECT * FROM hotel.customer", (err, result) => {
+app.get("/customers", (req, res) => {
+  db.query("SELECT * FROM hotel.customers", (err, result) => {
     if (err) {
       console.log(err);
-      res.status(500).send("Error fetching customer");
+      res.status(500).send("Error fetching customers");
     } else {
       res.send(result);
     }
   });
 });
 
-app.put("/updatecustomer/:id", (req, res) => {
+app.put("/updatecustomers/:id", (req, res) => {
   const id = req.params.id;
   const newcustomername = req.body.new_customername;
   db.query(
-    "UPDATE hotel.customer SET Customer_Name = ? WHERE Customer_ID = ?",
+    "UPDATE hotel.customers SET customer_name = ? WHERE customer_id = ?",
     [newcustomername, id],
     (err, result) => {
       if (err) {
         console.log(err);
-        res.status(500).send("Error updating user");
+        res.status(500).send("Error updating customers");
       } else {
         res.send(result);
       }
@@ -65,15 +63,15 @@ app.put("/updatecustomer/:id", (req, res) => {
   );
 });
 
-app.delete("/deletecustomer/:id", (req, res) => {
+app.delete("/deletecustomers/:id", (req, res) => {
   const id = req.params.id;
   db.query(
-    "DELETE FROM hotel.customer WHERE Customer_ID = ?",
+    "DELETE FROM hotel.customers WHERE customer_id = ?",
     id,
     (err, result) => {
       if (err) {
         console.log(err);
-        res.status(500).send("Error deleting user");
+        res.status(500).send("Error deleting customers");
       } else {
         res.send(result);
       }
@@ -81,6 +79,7 @@ app.delete("/deletecustomer/:id", (req, res) => {
   );
 });
 
+  
 app.listen(3001, () => {
-  console.log("Your server is running on port 3001");
+  console.log("Your server is running on port 3000");
 });

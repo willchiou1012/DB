@@ -3,92 +3,98 @@ import { useState } from "react";
 import Axios from "axios";
 
 function App() {
-  const [Customer_ID, setCustomer_ID] = useState("");
-  const [Customer_Name, setCustomer_Name] = useState("");
-  const [Customer_Number, setCustomer_Number] = useState("");
+  const [customerid, setcustomerid] = useState("");
+  const [customername, setcustomername] = useState("");
+  const [customernumber, setcustomernumber] = useState("");
+  const [customerList, setcustomerList] = useState([]);
+  
 
-//
-
+  // Function to add a new customer
   const addcustomer = () => {
-    Axios.post("http://localhost:3001/customer", {
-      Customer_ID: ID,
-      Customer_Name: Name,
-      Customer_Number: Number,
+    Axios.post("http://localhost:3001/createCustomers", {
+      customer_id:customerid,
+      customer_name: customername,
+      customer_number: customernumber,
+   
     }).then(() => {
-      getcustomer();
+      getcustomers(); // Refresh the customer list
     });
   };
 
-  const getcustomer = () => {
-    Axios.get("http://localhost:3001/customer").then((response) => {
+  // Function to get the list of customers
+  const getcustomers = () => {
+    Axios.get("http://localhost:3001/customers").then((response) => {
       setcustomerList(response.data);
     });
   };
 
-  const formatData = (dataString) => {
-    const data = new Data(dataString);
-    return data.toLocaleDateString();
-  };
 
-  const updatecustomer = (Customer_ID) => {
-    const newCustomername = prompt("Enter New Customer Name:");
-    if (newCustomername !== null) {
-      Axios.put(`http://localhost:3001/updatecustomer/${Customer_ID}` , {
-    }).then({} => {
-      getcustomer();
-    });
+  // Function to update a customer's information
+  const updatecustomer = (customerId) => {
+    const newcustomername = prompt("Enter new customername:");
+    if (newcustomername !== null) {
+      Axios.put(`http://localhost:3001
+      /updatecustomer/${customerId}`, {
+        new_customername: newcustomername,
+      }).then(() => {
+        getcustomers(); // Refresh the customer list
+      });
     }
   };
 
-  const deletecustomer = (Customer_ID) => {
-    Axios.get(`http://localhost:3001/deletecustomer/${Customer_ID}`).then(() => {
-      getcustomer();
+  // Function to delete a customer
+  const deletecustomer = (customerId) => {
+    Axios.delete(`http://localhost:3001/deletecustomer/${customerId}`).then(() => {
+      getcustomers(); // Refresh the customer list
     });
   };
+
 
   return (
     <div className="App">
       <div className="information">
-        <label>Customer_ID:</label>
+      <label>customerid:</label>
         <input
-          type="Customer_ID"
+          type="text"
           onChange={(event) => {
-            setName(event.target.value);
+            setcustomerid(event.target.value);
           }}
         />
-        <label>Customer_Name:</label>
+        <label>customername:</label>
         <input
-          type="Customer_Name"
+          type="text"
           onChange={(event) => {
-            setAge(event.target.value);
+            setcustomername(event.target.value);
           }}
         />
-        <label>Customer_Number:</label>
+        <label>customernumber:</label>
         <input
-          type="Customer_Number"
+          type="text"
           onChange={(event) => {
-            setCountry(event.target.value);
+            setgender(event.target.value);
           }}
         />
+        
         <button onClick={addcustomer}>Add customer</button>
       </div>
-      <div className="customer">
-        <button onClick={getcustomer}>Show customer</button>
+      <div className="customers">
+        <button onClick={getcustomers}>Show customers</button>
 
         {customerList.map((customer, index) => {
           return (
             <div className="customer" key={index}>
               <div>
                 <h3>ID: {customer.customer_id}</h3>
-                <h3>Name: {customer.customer_name}</h3>
-                <h3>Number: {customer.customer_number}</h3>
-                <button onClick={() => updatacustomer(customer.customer_id)}>Updata</button>
+                <h3>customername: {customer.customer_name}</h3>
+                <h3>customernumber:{customer.customer_number}</h3>
+                <button onClick={() => updatecustomer(customer.customer_id)}>Update</button>
                 <button onClick={() => deletecustomer(customer.customer_id)}>Delete</button>
               </div>
             </div>
           );
-        })};
+        })}
       </div>
+
     </div>
   );
 }
