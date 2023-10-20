@@ -5,7 +5,7 @@ import Axios from "axios";
 function App() {
   const [customerid, setcustomerid] = useState("");
   const [customername, setcustomername] = useState("");
-  const [customernumber, setcustomernumber] = useState("");
+  const [number, setnumber] = useState("");
   const [customerList, setcustomerList] = useState([]);
   
 
@@ -14,7 +14,7 @@ function App() {
     Axios.post("http://localhost:3001/createCustomers", {
       customer_id:customerid,
       customer_name: customername,
-      customer_number: customernumber,
+      customer_number: number,
    
     }).then(() => {
       getcustomers(); // Refresh the customer list
@@ -33,8 +33,7 @@ function App() {
   const updatecustomer = (customerId) => {
     const newcustomername = prompt("Enter new customername:");
     if (newcustomername !== null) {
-      Axios.put(`http://localhost:3001
-      /updatecustomer/${customerId}`, {
+      Axios.put(`http://localhost:3001/updatecustomer/${customerId}`, {
         new_customername: newcustomername,
       }).then(() => {
         getcustomers(); // Refresh the customer list
@@ -67,11 +66,11 @@ function App() {
             setcustomername(event.target.value);
           }}
         />
-        <label>customernumber:</label>
+        <label>number:</label>
         <input
           type="text"
           onChange={(event) => {
-            setgender(event.target.value);
+            setnumber(event.target.value);
           }}
         />
         
@@ -86,7 +85,7 @@ function App() {
               <div>
                 <h3>ID: {customer.customer_id}</h3>
                 <h3>customername: {customer.customer_name}</h3>
-                <h3>customernumber:{customer.customer_number}</h3>
+                <h3>number:{customer.customer_number}</h3>
                 <button onClick={() => updatecustomer(customer.customer_id)}>Update</button>
                 <button onClick={() => deletecustomer(customer.customer_id)}>Delete</button>
               </div>

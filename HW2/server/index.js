@@ -46,7 +46,7 @@ app.get("/customers", (req, res) => {
   });
 });
 
-app.put("/updatecustomers/:id", (req, res) => {
+app.put("/updatecustomer/:id", (req, res) => {
   const id = req.params.id;
   const newcustomername = req.body.new_customername;
   db.query(
@@ -55,7 +55,7 @@ app.put("/updatecustomers/:id", (req, res) => {
     (err, result) => {
       if (err) {
         console.log(err);
-        res.status(500).send("Error updating customers");
+        res.status(500).send("Error updating customer");
       } else {
         res.send(result);
       }
@@ -63,7 +63,7 @@ app.put("/updatecustomers/:id", (req, res) => {
   );
 });
 
-app.delete("/deletecustomers/:id", (req, res) => {
+app.delete("/deletecustomer/:id", (req, res) => {
   const id = req.params.id;
   db.query(
     "DELETE FROM hotel.customers WHERE customer_id = ?",
@@ -71,7 +71,7 @@ app.delete("/deletecustomers/:id", (req, res) => {
     (err, result) => {
       if (err) {
         console.log(err);
-        res.status(500).send("Error deleting customers");
+        res.status(500).send("Error deleting customer");
       } else {
         res.send(result);
       }
@@ -81,5 +81,5 @@ app.delete("/deletecustomers/:id", (req, res) => {
 
   
 app.listen(3001, () => {
-  console.log("Your server is running on port 3000");
+  console.log("Your server is running on port 3001");
 });
