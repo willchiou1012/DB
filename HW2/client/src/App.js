@@ -46,14 +46,6 @@ function App() {
     });
   };
 
-  const searchcustomer = () => {
-    Axios.get(`http://localhost:3001/searchcustomer?search=/${searchQuery}`).then(
-      (response) => {
-        setSearchResults(response,data);
-      }
-    );
-  };
-
   return (
     <div className="App">
       <div className="information">
@@ -97,32 +89,6 @@ function App() {
           );
         })};
       </div>
-
-      <div className="search">
-        <label>Search customer:</label>
-        <input
-          type="text"
-          onChange={(event) => {
-            setSearchQuery(event.target.value);
-          }}
-        />
-        <button onClick={searchcustomer}>Search</button>
-      </div>
-
-      {/* Display search results */}
-      <div className="search-results">
-        {searchResults.map((result, index) => {
-          return (
-            <div className="search-result" key={index}>
-              {/* <p>customername: {result.customer_name}</p> */}
-              <p>Ingredient: {result.ingredient_name}</p>
-              <p>Expiration Date: {formatDate(result.expiration_date)}</p>
-            </div>
-          );
-        })}
-      </div>
-
-
     </div>
   );
 }

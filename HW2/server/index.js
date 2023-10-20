@@ -81,35 +81,6 @@ app.delete("/deletecustomer/:id", (req, res) => {
   );
 });
 
-app.get("/searchUsers", (req, res) => {
-    const searchQuery = req.query.search || "";
-  
-    const sqlQuery = `
-      SELECT hotel.customer.Customer_ID, hotel.book.Booking_Day, hotel.comment.Comment_content
-      FROM hotel.users
-      INNER JOIN hotel.book ON hotel.customer.Customer_ID = hotel.book.Customer_ID
-      INNER JOIN hotel.comment ON hotel.book.Comment_content = hotel.comment.Comment_content
-      WHERE hotel.customer.Customer_ID LIKE ?
-      OR hotel.book.Booking_Day LIKE ?
-      OR hotel.comment.Comment_content LIKE ?
-    `;
-  
-    db.query(
-      sqlQuery,
-      [`%${searchQuery}%`, `%${searchQuery}%`, `%${searchQuery}%`],
-      (err, result) => {
-        if (err) {
-          console.log(err);
-          res.status(500).send("Error fetching search results");
-        } else {
-          res.send(result);
-        }
-      }
-    );
-  });
-
-  
-
 app.listen(3001, () => {
   console.log("Your server is running on port 3001");
 });
