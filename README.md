@@ -4,5 +4,6 @@
 Homework  
 Homework0:https://youtu.be/BOQOEoPx6Sg  
 Homework1:https://youtu.be/1QoQ52eghAk
-![messageImage_1696336027292](https://github.com/willchiou1012/DB/assets/113057094/7614d07e-5db5-40be-9310-97772d03b149)
+![messageImage_1696336027292](https://github.com/willchiou1012/DB/assets/113057094/7614d07e-5db5-40be-9310-97772d03b149)  
+Homework2:https://youtu.be/Jt2DFqPEtWY
 
